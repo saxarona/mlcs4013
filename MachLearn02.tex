@@ -1,0 +1,156 @@
+\documentclass{llncs}
+\usepackage[utf8]{inputenc}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage[spanish, mexico]{babel}
+
+\title{Tidy Data Case Study - Breve Revisión}
+\titlerunning{Tidy Data Case Study}
+\subtitle{Aprendizaje Automático - Tarea 2}
+\author{Xavier F. C. Sánchez Díaz\inst{1}}
+\authorrunning{X. Sánchez}
+\institute{Tecnológico de Monterrey \\
+\email{<A01170065@itesm.mx>}}
+
+\lstset{frame=tb,
+language=R,
+keywordstyle=\color{blue},
+alsoletter={.},
+numbers=left,
+stepnumber=1,
+}
+
+\begin{document}
+\maketitle
+\begin{abstract}
+Este trabajo incluye una breve revisión de la Sección 5 de \textit{Tidy Data}, de Hadley Wickham.
+El documento hace mención a los comandos ejecutados para replicar el caso de estudio e incluye algunas de las gráficas generadas por el script.
+\end{abstract}
+
+\section{Introducción}
+\label{sec:intro}
+
+\textit{Tidy Data}, de Hadley Wickham, echa un vistazo general al término \textit{data tidying}, o ``limpieza de datos'', como se le conoce en español~\cite{JSSv059i10}.
+La publicación muestra cómo limpiar y trabajar con cierta parte de un conjunto de datos, cómo manejarlos y visualizarlos utilizando el software \textit{RStudio}.
+Para la segunda tarea del curso CS4013 Aprendizaje Automático, se realizó una réplica del caso de estudio (Sección 5 del documento de Wickham), el cual es detallado en la Sección \ref{sec:case}.
+Finalmente algunas conclusiones son expuestas en la seción \ref{sec:conc}.
+
+\section{Caso de Estudio - Mortalidad en México}
+\label{sec:case}
+
+La réplica del caso de estudio de la Sección 5 de \textit{Tidy Data} se llevó a cabo en varias etapas, las cuales son detalladas a continuación.
+
+\subsection{Lectura del Documento}
+\label{subsec:read}
+
+En primera instancia, se llevó a cabo una lectura general del paper,
+donde se conocieron conceptos básicos de cómo se ordenan los datos en una tabla,
+y cómo se manejan en archivos separados por comas (CSV) o bases de datos relacionales (SQL).
+
+La lectura del material adicional, que venía a manera de apoyo introductorio en las instrucciones de la tarea, también se llevó a cabo en esta etapa.
+
+
+\subsection{Preparación del Framework}
+\label{subsec:frame}
+
+A pesar de que el paper hace mención específica al software \textit{RStudio}, la versión sin interfaz gráfica (consola) fue seleccionada para llevar a cabo la réplica del caso de estudio.
+
+Tras la instalación de \textit{R} se procedió a correr el código proporcionado en el documento.
+Sin embargo, había que depurar muchos errores:
+entre ellos la instalación de las librerías faltantes (\texttt{reshape2, ggplot2, plyr, stringr, MASS}, ...) y el cambio de directorio de trabajo del mismo \textit{R}.
+
+
+\subsection{Generación y Ajuste del Código}
+\label{subsec:code}
+
+La generación del código fue la etapa más compleja de todo el proceso.
+Durante esta etapa, se generó un nuevo archivo fuente al que se le llamó \texttt{my-study.r},
+el cuál contenía todos los fragmentos de código proporcionados en el paper.
+
+\begin{lstlisting}[label={lst:mystudy.r}, basicstyle=\scriptsize, 
+caption = {Código fuente de my-study.r}]
+hod2 <- count(deaths, c("hod", "cod"))
+hod2 <- subset(hod2, !is.na(hod))
+hod2 <- join(hod2, codes, by = "cod")
+hod2 <- ddply(hod2, "cod", transform, prop = freq / sum(freq))
+overall <- ddply(hod2, "hod", summarise, freq_all = sum(freq))
+overall <- transform(overall, prop_all = freq_all / sum(freq_all))
+hod2 <- join(hod2, overall, by = "hod")
+devi <- ddply(hod2, "cod", summarise, n = sum(freq),
+dist = mean((prop - prop_all)^2))
+devi <- subset(devi, n > 50)
+
+ggplot(data = devi, aes(x = n, y = dist)) + geom_point()
+last_plot() + scale_x_log10() + scale_y_log10() +
+geom_smooth(method = "rlm", se = FALSE)
+ggsave("n-dist-resid.pdf", width = 6, height = 6)
+
+devi$resid <- resid(rlm(log(dist) ~ log(n), data = devi))
+unusual <- subset(devi, resid > 1.5)
+hod_unusual <- match_df(hod2, unusual)
+ggplot(hod_unusual_big, aes(hod, prop)) + 
+  geom_line(aes(y = prop_all),
+  data = overall, colour = "grey50") +
+  geom_line() + 
+  facet_wrap(~ disease, ncol = 3)
+
+ggsave("unusual-big.pdf", width = 8, height = 6)
+last_plot() %+% hod_unusual_sml
+ggsave("unusual-sml.pdf", width = 8, height = 4)
+
+\end{lstlisting}
+
+Cabe mencionar que varias de las lineas presentes en el List. 1.1 fueron modificadas para poder correr al mismo tiempo.
+Habían algunos errores de sintaxis, como doble signo + o paréntesis que hacía falta cerrar.
+
+\section{Implementación del Código}
+\label{sec:code2}
+
+Para la implementación del código fue necesario descargar el repositorio que viene mencionado en secciones anteriores a la del caso de estudio.
+Específicamente, se trabajó con el archivo \texttt{case-study.r}, para hacer la obtención de los datos de manera preliminar.
+
+Viendo un poco el código, se encuentra que los datos están siendo obtenidos directamente de otro repositorio: \url{https://github.com/hadley/mexico-mortality/raw/master/deaths/deaths08.csv.bz2}.
+
+Fue con ayuda de \texttt{case-study.r} que se identificaron los pequeños errores de sintaxis de los últimos comandos en el List. 1.1.
+Además, se obtuvieron líneas de código importantes, como los comandos \texttt{ggsave(``filename'', [width=0], [height=0])} para guardar las gráficas generadas por el código.
+
+A continuación se incluyen las gráficas generadas por el conjunto de comandos de la Sección 5 del trabajo de Wickham.
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.95\textwidth]{n-dist-resid}
+	\caption{Primer gráfico, generado por la línea 12 del List. 1.1}
+	\label{fig:ndistresid}
+\end{figure}
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.95\textwidth]{unusual-big}
+	\caption{Segundo gráfico, generado por la línea 20 del List. 1.1}
+	\label{fig:unusualbig}
+\end{figure}
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.95\textwidth]{unusual-sml}
+	\caption{Tercer gráfico, generado por por la línea 20 del List. 1.1. Este gráfico es una modificación de Fig. \ref{fig:unusualbig}.}
+	\label{fig:unusual-sml}
+\end{figure}
+
+\pagebreak
+
+\section{Conclusiones}
+\label{sec:conc}
+
+Este documento presentó una breve revisión del caso de estudio de Hadley Wickham en \textit{Tidy Data}.
+A pesar de que el paper contenía errores de sintaxis, se pudieron resolver con ayuda del repositorio del experimento.
+En general, se aprendió a utilizar los comandos básicos de R como cambiar de directorio y correr un programa,
+así como también generar gráficos y guardarlos con un nombre de archivo y dimensiones dadas.
+Definitivamente R es una herramienta que ayudará a que el análisis de datos sea más sencillo en un futuro.
+
+\bibliographystyle{IEEEtran}
+\bibliography{IEEEabrv,biblio}
+
+\end{document}
