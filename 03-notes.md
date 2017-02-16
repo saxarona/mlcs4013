@@ -19,7 +19,9 @@ The cost calculated by these two new functions rise sharply, but the `theta` val
 A selection of `lambda` values were used: {0, 1, 0.5, 0.05, 0.01} and the result was the same. It seems that 1500 iterations is enough to find the optimal `theta` values for this linear model.
 
 Check the code for the modified `ex1.m` [here](https://gitlab.com/snippets/1602713).
+
 Check the code for the modified `computeCost.m` [here](https://gitlab.com/snippets/1602721).
+
 Check the code for the modified `gradientDescent.m` [here](https://gitlab.com/snippets/1602731).
 
 ## tidy-data
