@@ -21,3 +21,9 @@ A selection of `lambda` values were used: {0, 1, 0.5, 0.05, 0.01} and the result
 ## tidy-data
 
 In the case of `tidy-data`, the `dist` variable was modified to include the quadratic regularizer. Again, even with a `lambda` value of 1, there's no change in the linear model obtained using regression.
+
+I added a line to the `case-study.r` file provided in the `tidy-data` Github repo around **line 71**, which is this one:
+
+````R
+dist = devi['dist'] + norm(hod3["prop_all"], type=c("2"))^2 /2
+````
