@@ -69,10 +69,12 @@ def merge(mode):
 
                         if(mode == "Full"):
                             for index, att in enumerate(temp):
-                                if(index != 1 and index != 2):
+                                if(index == 0):
+                                    aux.append(att)
+                                elif(index != 1 and index != 2):
                                     aux.append(str(index+1) + ':' + att)
-                                    mydata.append(aux)
                                     # print(aux)
+                            mydata.append(aux)
 
                         else:
                             for index, att in enumerate(temp):
@@ -92,11 +94,11 @@ def merge(mode):
                 except csv.Error as e:
                     sys.exit('Eror wn')
 
-    with open(mode + '_test.txt', 'w') as outfile:
+    with open(mode + '.txt', 'w') as outfile:
         writer = csv.writer(outfile, delimiter=' ', lineterminator='\n')
         for line in mydata:
             writer.writerow(line)
-    print("Done.\n Output file: {}_test.txt".format(mode))
+    print("Done.\n Output file: {}.txt".format(mode))
 
 
 # if this works, we can then replace every file
@@ -113,7 +115,7 @@ def main():
     # Switch between modes,
     # e.g. merge(mode="1") will only consider class 1 and
     # assign -1 to all other classes in the class attribute
-    merge(mode="10")
+    merge(mode="Full")
     
 
 
