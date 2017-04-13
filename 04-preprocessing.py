@@ -77,16 +77,17 @@ def merge(mode):
                         else:
                             for index, att in enumerate(temp):
                                 # Appending class attribute
-                                if(index == 0 and att == mode):
-                                    aux.append("1")
-                                elif(index == 0 and att != mode):
-                                    aux.append("-1")
+                                if(index == 0):
+                                    if(att == mode):
+                                        aux.append("1")
+                                    else:
+                                        aux.append("-1")
 
                                 # Appending the rest of the attributes
-                                if(index != 0 and index != 1 and index != 2):
+                                elif(index != 1 and index != 2):
                                     aux.append(str(index+1) + ':' + att)
-                                    mydata.append(aux)
                                     # print(aux)
+                            mydata.append(aux)
 
                 except csv.Error as e:
                     sys.exit('Eror wn')
@@ -112,7 +113,8 @@ def main():
     # Switch between modes,
     # e.g. merge(mode="1") will only consider class 1 and
     # assign -1 to all other classes in the class attribute
-    merge(mode="10")
+    merge(mode="1")
+    
 
 
 if __name__ == '__main__':
