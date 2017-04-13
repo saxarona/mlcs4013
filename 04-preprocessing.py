@@ -1,7 +1,8 @@
 # dataset preprocessing
 
 """
-I treated all files in order to get 1 big db instead of 1k files.
+I treated all files in order to get bigger dbs instead of 1k separated files.
+Please read the docstrings of the functions.
 The dataset is ready.
 So am I.
 """
@@ -52,6 +53,8 @@ def merge(mode="Full"):
     Default mode is Full, where all data entries are merged into a single file.
     Otherwise, mode describes which class should be included.
     """
+    print("Running mode: {}".format(mode))
+
     for filename in mydir:
         with open(filename, 'r') as csvfile:
                 reader = csv.reader(csvfile, delimiter=' ')
@@ -66,13 +69,17 @@ def merge(mode="Full"):
                             for index, att in enumerate(temp):
                                 if(index != 1 and index != 2):
                                     aux.append(str(index+1) + ':' + att)
+                                    mydata.append(aux)
+                                    print(aux)
+
                         else:
                             for index, att in enumerate(temp):
-                                if(index == 0 and att == int(mode)):
-                                    if(index != 1 and index != 2):
+                                if(index == 0 and att != mode):
+                                    break
+                                elif(index != 1 and index != 2):
                                         aux.append(str(index+1) + ':' + att)
-                        print(aux)
-                        mydata.append(aux)
+                                        mydata.append(aux)
+                                        print(aux)
 
                 except csv.Error as e:
                     sys.exit('Eror wn')
@@ -81,7 +88,7 @@ def merge(mode="Full"):
         writer = csv.writer(outfile, delimiter=' ')
         for line in mydata:
             writer.writerow(line)
-    print("Done.\n Output file: %s.txt", mode)
+    print("Done.\n Output file: {}.txt".format(mode))
 
 
 # if this works, we can then replace every file
@@ -91,7 +98,14 @@ def merge(mode="Full"):
 #       file.write(' '.join(mydata[index]))
 
 def main():
-    merge("1") #let's try with a's
+    # First we standarize
+    # standarize()
+
+    # Then we merge in different modes
+    # Switch between modes,
+    # e.g. merge(mode="1") will only consider class 1
+    merge(mode="Full")
+
 
 if __name__ == '__main__':
     main()
