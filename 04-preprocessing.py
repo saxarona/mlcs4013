@@ -22,13 +22,13 @@ mydir.remove(scriptname)
 # Standarize data
 # This is because there was data separated by a single space
 # and some other attributes were separated by a double space
-# terrible, if you ask me.
+# Terrible, if you ask me.
 
 
 def standarize():
     """
     Standarize data files so that all of them are separated
-    by a single space instad of double space.
+    by a single space instead of a double space.
     """
     for filename in mydir:
         with open(filename, 'r') as file:
@@ -47,11 +47,13 @@ def standarize():
 # a single file in csv mode
 
 
-def merge(mode="Full"):
+def merge(mode):
     """
     Merge all data files into a single file.
-    Default mode is Full, where all data entries are merged into a single file.
-    Otherwise, mode describes which class should be included.
+    If mode is Full,all data entries are merged into a single file
+    with classes attributes stated as 1:1 or 1:10.
+    Otherwise, the mode argument describes which class should be marked as 1,
+    and the rest of the classes are marked as -1 in the class att.
     """
     print("Running mode: {}".format(mode))
 
@@ -70,16 +72,21 @@ def merge(mode="Full"):
                                 if(index != 1 and index != 2):
                                     aux.append(str(index+1) + ':' + att)
                                     mydata.append(aux)
-                                    print(aux)
+                                    # print(aux)
 
                         else:
                             for index, att in enumerate(temp):
-                                if(index == 0 and att != mode):
-                                    break
-                                elif(index != 1 and index != 2):
-                                        aux.append(str(index+1) + ':' + att)
-                                        mydata.append(aux)
-                                        print(aux)
+                                # Appending class attribute
+                                if(index == 0 and att == mode):
+                                    aux.append("1")
+                                elif(index == 0 and att != mode):
+                                    aux.append("-1")
+
+                                # Appending the rest of the attributes
+                                if(index != 0 and index != 1 and index != 2):
+                                    aux.append(str(index+1) + ':' + att)
+                                    mydata.append(aux)
+                                    # print(aux)
 
                 except csv.Error as e:
                     sys.exit('Eror wn')
@@ -103,8 +110,9 @@ def main():
 
     # Then we merge in different modes
     # Switch between modes,
-    # e.g. merge(mode="1") will only consider class 1
-    merge(mode="Full")
+    # e.g. merge(mode="1") will only consider class 1 and
+    # assign -1 to all other classes in the class attribute
+    merge(mode="10")
 
 
 if __name__ == '__main__':

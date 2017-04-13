@@ -18,7 +18,7 @@ I, somehow, managed to *somewhat* understand what an SVM is and how does it work
 1. A complete explanation of SVMs as quadratic optimization problems and such by Andrew Ng (of course). It is explained [here](http://cs229.stanford.edu/notes/cs229-notes3.pdf). A decent understanding of optimization (what's a primal, its dual and such) is recommended.
 2. An ELI5 (Explain Like I'm 5-years-old) explanation which is [here](https://www.reddit.com/r/MachineLearning/comments/15zrpp/please_explain_support_vector_machines_svm_like_i/). The analogy of the villain and the ninja powers is incredibly enlightening.
 
-I now joined all available data in a single file using a Python script which can be found [here](04-preprocessing.py). I just need to make the SVM work and start writing about it!
+I now joined all available data in different training files using a Python script which can be found [here](04-preprocessing.py). I just need to make the SVM work and start writing about it!
 
 ## What's next
 
@@ -41,8 +41,11 @@ This is the data format:
 We can ignore `OBJNUM`, since it's just the number of the instance.
 However, `TYPE`, `XX` and `YY` coordinates, and both `SIZE` and `DIAG` are useful attributes that we wish to keep in our dataset.
 
-Originally, the data was stored in the format presented above, but `libsvmread` can only read data in sparse format:
+Originally, the data was stored in the format presented above, but `libsvmread` can only read data in sparse format, like this:
 
-> 1:1 2:3 3:2 4:1 5:1
+> 1 2:1 3:3 4:2 5:1 6:20
 
-In this format, each data attribute is separated by a space. The number on the left of the colon represents the number of the attribute: first, second, *n*-column. The value of each attribute is described using the number on the right of the colon. Therefore, `1:1` means that the first attribute has a value of 1, which means that the character belongs to class 1, which is A.
+In this format, each data attribute is separated by a space. The number on the left of the colon represents the number of the attribute: first, second, *n*-column. The value of each attribute is described using the number on the right of the colon. Therefore, `8:20` means that the eighth attribute has a value of 20, which means that the `SIZE` attribute of this data point is 20.
+It is important to note that the first attribute is always 1 or -1, which is the class of each example. Thing is, `libsvm` only works on two-class datasets (that is, if it belongs to a class, or not). Since we're dealing with 10 classes, we need to train 10 SVMs. Oh god.
+
+Nevertheless, it's already done. Now on to training!
