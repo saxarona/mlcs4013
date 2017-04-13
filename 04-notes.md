@@ -18,6 +18,8 @@ I, somehow, managed to *somewhat* understand what an SVM is and how does it work
 1. A complete explanation of SVMs as quadratic optimization problems and such by Andrew Ng (of course). It is explained [here](http://cs229.stanford.edu/notes/cs229-notes3.pdf). A decent understanding of optimization (what's a primal, its dual and such) is recommended.
 2. An ELI5 (Explain Like I'm 5-years-old) explanation which is [here](https://www.reddit.com/r/MachineLearning/comments/15zrpp/please_explain_support_vector_machines_svm_like_i/). The analogy of the villain and the ninja powers is incredibly enlightening.
 
+I now joined all available data in a single file using a Python script which can be found [here](04-preprocessing.py). I just need to make the SVM work and start writing about it!
+
 ## What's next
 
 My next move is to train the SVM (which is pretty easy to use following the examples of Stanford Open Classroom's activity) with the data provided. The Open Classroom activity is located [here](http://openclassroom.stanford.edu/MainFolder/DocumentPage.php?course=MachineLearning&doc=exercises/ex7/ex7.html).
@@ -27,9 +29,9 @@ Sounds easy enough, so I'll do it tomorrow or so.
 
 ## The dataset
 
-Thing is, our data is horribly presented in separated files, so I'm guessing we're joining them in a single file and let read it all using `libsvmread`. The data is located [here](https://archive.ics.uci.edu/ml/datasets/Artificial+Characters).
+Thing is, our data was horribly presented in separated files, so I joined them all in a single file and modified its presentation so that it could be read by `libsvmread`. The dataset is located [here](https://archive.ics.uci.edu/ml/datasets/Artificial+Characters).
 
-This dataset represent artificially created characters which can be of 10 different classes, ranging from 1 to 10, namely: A, C, D, E, F, G, H, L, P and R.
+This dataset represent artificially created characters which can be of **10 different classes**, ranging from 1 to 10, namely: A, C, D, E, F, G, H, L, P and R.
 
 This is the data format:
 
@@ -39,4 +41,8 @@ This is the data format:
 We can ignore `OBJNUM`, since it's just the number of the instance.
 However, `TYPE`, `XX` and `YY` coordinates, and both `SIZE` and `DIAG` are useful attributes that we wish to keep in our dataset.
 
-I'm not sure of what else I should write, but I'll be updating as needed.
+Originally, the data was stored in the format presented above, but `libsvmread` can only read data in sparse format:
+
+> 1:1 2:3 3:2 4:1 5:1
+
+In this format, each data attribute is separated by a space. The number on the left of the colon represents the number of the attribute: first, second, *n*-column. The value of each attribute is described using the number on the right of the colon. Therefore, `1:1` means that the first attribute has a value of 1, which means that the character belongs to class 1, which is A.
