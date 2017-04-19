@@ -86,7 +86,57 @@ Además, se juntaron todos los ejemplos en un archivo único para aprendizaje y 
 \subsection{Árbol de Decisión}
 \label{subsec:tree}
 
-aa
+Para aplicar el algoritmo de árboles de decisión, se optó por utilizar el \textit{toolbox} de \texttt{MATLAB} de \texttt{Statistics and Machine Learning}, el cual contiene funciones para facilitar el uso de árboles de decisión para clasificación~\cite{MATLAB:2017}.
+Las funciones que se utilizaron fueron las siguientes:
+
+\begin{itemize}
+	\item \texttt{fitctree}: Genera un árbol binario de clasificación para clasificación multiclase.
+	Recibe como parámetros las entradas y sus clasificaciones.
+	\item \texttt{prune}: Realiza el podado del árbol para eliminar ramas del mismo.
+	Recibe como parámetros el árbol, la etiqueta ‘level’ y el nivel de podado.
+	\item \texttt{view}: Despliega el árbol aprendido.
+	\item \texttt{predict}: Dado un árbol y entradas, regresa una predicción de la clasificación de cada entrada.
+\end{itemize}
+
+Se utilizaron dos conjuntos de datos, uno de 5109 y otro de 25545 observaciones, para generar dos árboles.
+El primer árbol se entrenó con el conjunto de 5109 observaciones y el segundo con el de 25545 (\textit{learn} y \textit{test}, respectivamente).
+El primer árbol tuvo una precisión del 50.91\% en el segundo conjunto (25545 observaciones),
+mientras que el segundo árbol tuvo una precisión de 55.65\% en el primer conjunto.
+
+Una vez que se obtuvieron los árboles, se realizaron varios niveles de podado a cada uno para ver si la precisión podía mejorar con la poda.
+La mejor precisión fue de 56.86\% y la obtuvo el segundo árbol con nivel de podado 65.
+La figura~\ref{fig:tree} muestra el árbol resultante después de la poda.
+Las ramas negras son las que fueron podadas.
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.95\textwidth]{04-tree}
+	\caption{Árbol resultante después de la poda}
+	\label{fig:tree}
+\end{figure}
+
+En la tabla~\ref{tab:tree} se pueden observar los resultados obtenidos.
+
+\begin{table}[htbp]
+\centering
+\caption{Resultados de los experimentos con Árboles de Decisión}
+\label{tab:tree}
+\begin{tabular}{@{}cccc@{}}
+\toprule
+Train & Test  & Nivel de Poda & Precisión (\%) \\ \midrule
+5109  & 25545 & 0 & 50.91   \\
+5109  & 25545 &  13 & 51.70   \\
+25545 & 5109  & 0 & 55.65   \\
+25545 & 5109  & 65 & 56.86   \\ \bottomrule
+\end{tabular}
+\end{table}
+
+Como se puede apreciar en la Tabla~\ref{tab:tree}, no hubo una gran diferencia entre el peor y el mejor desempeño a pesar de que la cantidad de datos de entrenamiento fue cinco veces mayor.
+Además, la precisión sólo aumentó 1.2\% después de realizar la poda.
+Se esperaba que la precisión fuera un poco menor después de realizar la poda ya que se están eliminando ramas para disminuir el tamaño del árbol y generalizar.
+Sin embargo, la generalización de esas ramas provocó un incremento en la precisión, lo cual pudo haber sido por eliminar un poco el sobreajuste que se generó durante el entrenamiento.
+
+El código fuente del árbol de decisión está en la carpeta de la tarea, con el nombre \texttt{04-decisiontree.m}, y fue hecho en \texttt{MATLAB}.
 
 \subsection{Support Vector Machine}
 \label{subsec:svm}
@@ -121,7 +171,7 @@ Los detalles adicionales de precisión se encuentran en la Tabla~\ref{tab:svm}.
 \label{tab:svm}
 \begin{tabular}{@{}cccc@{}}
 \toprule
-Parámetros & Train & Test  & Precisión \\ \midrule
+Parámetros & Train & Test  & Precisión (\%) \\ \midrule
 Default    & 5109  & 25545 & 47.4731   \\
 Opt. Local & 5109  & 25545 & 56.6647   \\
 Default    & 25545 & 5109  & 57.4476   \\
@@ -137,10 +187,18 @@ Un comportamiento `opuesto' ocurre en otros modelos como \textit{Naive Bayes},
 donde el modelo se comporta mejor con pocos datos de entrenamiento.
 Un SVM muestra mejor desempeño asintótico, sin embargo, si existen más ejemplos para entrenar.
 
+El código fuente del SVM está en la carpeta de la tarea con el nombre \texttt{04-svm.m}, y fue hecho en \texttt{Octave}.
+
 \section{Conclusiones y Reflexiones}
 \label{sec:conc}
 
-aa pls
+Este reporte incursionó en la implementación de dos clasificadores muy conocidos de \textit{Machine Learning},
+los árboles de decisión y las máquinas de vectores de soporte.
+Cada uno tiene ventajas y desventajas, y la precisión obtenida por ambos modelos está dentro del mismo rango.
+Es importante recalcar que el \textit{dataset}, a pesar de ser muy grande no da una idea muy clara para ambos métodos de clasificación.
+Es posible que el hecho de que sea multiclase (10 clases) y el reducido número de atributos (7 en total) haga que el aprendizaje sea más complicado.
+El ejercicio estuvo muy interesante, pues reforzó la idea de que los métodos de clasificación necesitan de muchos datos para tener un buen desempeño.
+Además, se utilizaron módulos y \textit{toolboxes} de la literatura que permiten ver las dificultades de la implementación de los clasificadores.
 
 \bibliographystyle{splncs03}
 \bibliography{04-biblio}
