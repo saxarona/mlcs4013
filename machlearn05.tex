@@ -72,12 +72,12 @@ Se generaron dos bases distintas: una para entrenamiento y otra para pruebas, qu
 \label{subsec:trees}
 
 El primer árbol utilizado fue el J-48~\cite{Quinlan1993}.
-Este árbol presentó un 92.87\% de eficiencia de aprendizaje,
+Este árbol presentó un 92.87\% de precisión de aprendizaje,
 es decir que tras entrenarse con el 60\% del \textit{dataset} (5924 instancias),
 se probó sobre las mismas instancias.
 Sin embargo, al probar el árbol resultante en el conjunto de pruebas
 (40\% del \textit{dataset}, 3949 instancias),
-la eficiencia alcanzada fue del 50.79\%.
+la precisión alcanzada fue del 50.79\%.
 El árbol resultante puede verse en la Figura~\ref{fig:j48} exportada directamente de la interfaz de WEKA.
 
 \begin{figure}[htbp]
@@ -88,8 +88,8 @@ El árbol resultante puede verse en la Figura~\ref{fig:j48} exportada directamen
 \end{figure}
 
 El siguiente árbol utilizado para los experimentos fue creado usando el algoritmo LMT~\cite{Landwehr2005}.
-Este árbol presentó un 98.26\% de eficiencia de aprendizaje tras entrenarse con el 60\% del dataset, probándose sobre las mismas instancias.
-Una vez más, la eficiencia bajó sobremanera al probar con el 40\% restante, en el conjunto de pruebas:
+Este árbol presentó un 98.26\% de precisión de aprendizaje tras entrenarse con el 60\% del dataset, probándose sobre las mismas instancias.
+Una vez más, la precisión bajó sobremanera al probar con el 40\% restante, en el conjunto de pruebas:
 53.10\% de los ejemplos bien clasificados.
 El árbol resultante se presenta en la Figura~\ref{fig:lmt}, extraída directamente de WEKA.
 
@@ -103,9 +103,9 @@ El árbol resultante se presenta en la Figura~\ref{fig:lmt}, extraída directame
 La tercer prueba fue realizada utilizando varios árboles aleatorios, técnica conocida como \textit{Random Forest}.
 Las pruebas sobre el conjunto de entrenamiento fueron perfectas,
 pues se logró clasificar correctamente el 100\% de los ejemplos (5924 instancias).
-La eficiencia sobre el conjunto de pruebas, a pesar de haber disminuido,
+La precisión sobre el conjunto de pruebas, a pesar de haber disminuido,
 se vio menos afectada que en los casos anteriores:
-se alcanzó una eficiencia del 64.16\% sobre las 3949 instancias de prueba.
+se alcanzó una precisión del 64.16\% sobre las 3949 instancias de prueba.
 
 Tras llevar a cabo estos tres experimentos, se procedió a reducir el número de atributos del conjunto de datos para ver si había diferencia alguna con los árboles previamente generados.
 Esta fase de preprocesamiento fue automática, utilizando el filtro \texttt{AttributeSelection} de WEKA.
@@ -115,10 +115,10 @@ Dos experimentos más se llevaron a cabo, una usando el algoritmo J48 y otra el 
 
 El árbol generado con J48 para el nuevo conjunto de entrenamiento (y probado sobre sí mismo)
 logró un 90.73\% de ejemplos bien clasificados; cerca del 2\% menos que su versión sin selección de atributos.
-Su eficiencia en el conjunto de prueba ascendió al 51.83\%, poco más del 1 porciento.
-Por su parte, el porcentaje de eficiencia para el árbol generado con LMT sobre el conjunto de entrenamiento (y probado sobre sí mismo)
+Su precisión en el conjunto de prueba ascendió al 51.83\%, poco más del 1 porciento.
+Por su parte, el porcentaje de precisión para el árbol generado con LMT sobre el conjunto de entrenamiento (y probado sobre sí mismo)
 fue de 68.18\%; alrededor de 30\% menos que su versión sin selección de atributos.
-Su eficiencia con el nuevo conjunto de pruebas se redujo cerca del 2\%,
+Su precisión con el nuevo conjunto de pruebas se redujo cerca del 2\%,
 pues alcanzó el 51.30\% de los ejemplos bien clasificados.
 
 \subsection{Agrupamiento jerárquico}
